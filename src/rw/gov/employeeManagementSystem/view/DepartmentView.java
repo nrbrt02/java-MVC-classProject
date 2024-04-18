@@ -470,7 +470,9 @@ public class DepartmentView extends javax.swing.JFrame {
     }//GEN-LAST:event_updateDptBtn1ActionPerformed
 
     private void addDptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDptBtnActionPerformed
-        if (dptName.getText().trim().isEmpty() || dptName.getText().length() < 4) {
+        if(allDepartment.getSelectedRow() != -1){
+            JOptionPane.showMessageDialog(this, "Diselect a selected row To insert");
+        }else if (dptName.getText().trim().isEmpty() || dptName.getText().length() < 4) {
             JOptionPane.showMessageDialog(this, "Name not Valid \nMake sure not Empty \nMake sure not less that 4 char");
         } else {
             Department newDepartment = new Department();

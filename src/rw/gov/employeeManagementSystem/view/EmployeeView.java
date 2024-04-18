@@ -377,8 +377,13 @@ public class EmployeeView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEmpActionPerformed
-
-        if (empNames.getText().equals("") || empNames.getText().length() <= 4) {
+        if (allEmployee1.getSelectedRow() != -1) {
+            JOptionPane.showMessageDialog(this, "DisSelect selected row");
+        } else if (gender.getSelection() == null) {
+            JOptionPane.showMessageDialog(this, "Select gender");
+        } else if (jobId.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Select a Job id");
+        } else if (empNames.getText().equals("") || empNames.getText().length() <= 4) {
             JOptionPane.showMessageDialog(this, "Names Is not valid \n Make sure that the name is not empty and  \n  Make sure the length is above 4 characters");
         } else if (email.getText().equals("") || !isValidEmail(email.getText())) {
             JOptionPane.showMessageDialog(this, "Email is not Valid");
@@ -471,8 +476,9 @@ public class EmployeeView extends javax.swing.JFrame {
     }//GEN-LAST:event_allEmployeeMouseClicked
 
     private void updateEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateEmpActionPerformed
-
-        if (empNames.getText().equals("") || empNames.getText().length() <= 4) {
+        if (allEmployee1.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(this, "Select a row to Update");
+        } else if (empNames.getText().equals("") || empNames.getText().length() <= 4) {
             JOptionPane.showMessageDialog(this, "Names Is not valid \n Make sure that the name is not empty and  \n  Make sure the length is above 4 characters");
         } else if (email.getText().equals("") || !isValidEmail(email.getText())) {
             JOptionPane.showMessageDialog(this, "Email is not Valid");
@@ -515,31 +521,36 @@ public class EmployeeView extends javax.swing.JFrame {
     }//GEN-LAST:event_updateEmpActionPerformed
 
     private void deleteEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEmpActionPerformed
-        int choice = JOptionPane.showConfirmDialog(null, "Are U sure To delete", "confirm", JOptionPane.YES_NO_OPTION);
 
-        if (choice == JOptionPane.YES_OPTION) {
+        if (allEmployee1.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(this, "Select a row to Delete");
+        } else {
+            int choice = JOptionPane.showConfirmDialog(null, "Are U sure To delete", "confirm", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
 
-            try {
-                int selectedRow = allEmployee1.getSelectedRow();
-                DefaultTableModel tbModel = (DefaultTableModel) allEmployee1.getModel();
-                int theId = Integer.parseInt(tbModel.getValueAt(selectedRow, 0).toString());
-                EmployeeDao theEmployeeDao = new EmployeeDao();
-                Integer rowAffected = theEmployeeDao.delete(theId);
+                try {
+                    int selectedRow = allEmployee1.getSelectedRow();
+                    DefaultTableModel tbModel = (DefaultTableModel) allEmployee1.getModel();
+                    int theId = Integer.parseInt(tbModel.getValueAt(selectedRow, 0).toString());
+                    EmployeeDao theEmployeeDao = new EmployeeDao();
+                    Integer rowAffected = theEmployeeDao.delete(theId);
 
-                if (rowAffected != null) {
-                    JOptionPane.showMessageDialog(this, "Employee Deleted");
-                    empNames.setText("");
-                    email.setText("");
-                    jobId.setSelectedIndex(0);
-                    allEmpRetrived();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Employee not Deleted");
+                    if (rowAffected != null) {
+                        JOptionPane.showMessageDialog(this, "Employee Deleted");
+                        empNames.setText("");
+                        email.setText("");
+                        jobId.setSelectedIndex(0);
+                        allEmpRetrived();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Employee not Deleted");
+                    }
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
         }
+
     }//GEN-LAST:event_deleteEmpActionPerformed
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed

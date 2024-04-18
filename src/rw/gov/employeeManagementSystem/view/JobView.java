@@ -358,34 +358,43 @@ public class JobView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        int choice = JOptionPane.showConfirmDialog(null, "Are U sure To delete", "confirm", JOptionPane.YES_NO_OPTION);
 
-        if (choice == JOptionPane.YES_OPTION) {
-            int rowSelected = allJobs.getSelectedRow();
-            DefaultTableModel tbModel = (DefaultTableModel) allJobs.getModel();
-            int theId = Integer.parseInt(tbModel.getValueAt(rowSelected, 0).toString());
+        if (allJobs.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(this, "Select a Row to delete");
+        } else {
+            int choice = JOptionPane.showConfirmDialog(null, "Are U sure To delete", "confirm", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                int rowSelected = allJobs.getSelectedRow();
+                DefaultTableModel tbModel = (DefaultTableModel) allJobs.getModel();
+                int theId = Integer.parseInt(tbModel.getValueAt(rowSelected, 0).toString());
 
-            JobDao theJobDao = new JobDao();
-            Integer rowsAffected = theJobDao.delete(theId);
+                JobDao theJobDao = new JobDao();
+                Integer rowsAffected = theJobDao.delete(theId);
 
-            if (rowsAffected != null) {
-                JOptionPane.showMessageDialog(this, "JOB Deleted");
-                jName.setText("");
-                description.setText("");
-                departmentName.setSelectedIndex(0);
-                allJobsRetrived();
-            } else {
-                JOptionPane.showMessageDialog(this, "JOB NOT Deleted");
+                if (rowsAffected != null) {
+                    JOptionPane.showMessageDialog(this, "JOB Deleted");
+                    jName.setText("");
+                    description.setText("");
+                    departmentName.setSelectedIndex(0);
+                    allJobsRetrived();
+                } else {
+                    JOptionPane.showMessageDialog(this, "JOB NOT Deleted");
+                }
             }
         }
+
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
-        if (jName.getText().trim().isEmpty() || jName.getText().length() < 4) {
+        if (allJobs.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(this, "Select a Row to update");
+        } else if (departmentName.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Select Department");
+        } else if (jName.getText().trim().isEmpty() || jName.getText().length() < 4) {
             JOptionPane.showMessageDialog(this, "Name not Valid \n Make sure Not Empty\n Make sure length not less than 4 chars");
         } else if (description.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Description not Valid ");
-        }else {
+        } else {
 
             int rowSelected = allJobs.getSelectedRow();
             DefaultTableModel tbModel = (DefaultTableModel) allJobs.getModel();
@@ -413,7 +422,11 @@ public class JobView extends javax.swing.JFrame {
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
-        if (jName.getText().trim().isEmpty() || jName.getText().length() < 4) {
+        if (allJobs.getSelectedRow() != -1) {
+            JOptionPane.showMessageDialog(this, "Unselect Selected row");
+        } else if (departmentName.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Select Department");
+        } else if (jName.getText().trim().isEmpty() || jName.getText().length() < 4) {
             JOptionPane.showMessageDialog(this, "Name not Valid \n Make sure Not Empty\n Make sure length not less than 4 chars");
         } else if (description.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Description not Valid ");
@@ -523,7 +536,7 @@ public class JobView extends javax.swing.JFrame {
 
         dispose();
     }//GEN-LAST:event_summaryBtnActionPerformed
-    
+
     private void fillCombBox() {
         DepartmentDao departments = new DepartmentDao();
         ResultSet rs = departments.allDepartments();
@@ -534,33 +547,34 @@ public class JobView extends javax.swing.JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
     }
-    
+
     private void allJobsRetrived() {
         JobDao jobDao = new JobDao();
-        
+
         ResultSet rs = jobDao.allJobs();
         DefaultTableModel tbModel = (DefaultTableModel) allJobs.getModel();
         tbModel.setRowCount(0);
-        
+
         try {
             while (rs.next()) {
                 String id = rs.getString("id");
                 String name = rs.getString("name");
                 String dname = rs.getString("department");
                 String description = rs.getString("description");
-                
+
                 String tData[] = {id, name, dname, description};
-                
+
                 tbModel.addRow(tData);
-                
+
             }
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+
     /**
      * @param args the command line arguments
      */

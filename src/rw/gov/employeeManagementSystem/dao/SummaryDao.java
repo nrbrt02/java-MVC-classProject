@@ -13,7 +13,7 @@ public class SummaryDao {
     public ResultSet allSummary() {
         try {
             Connection connection = DriverManager.getConnection(jdbcURL, user, "");
-            String sql = " SELECT * FROM employee INNER JOIN job ON employee.job_id = job.id INNER JOIN salary ON salary.job_name = job.name;";
+            String sql = " SELECT * FROM employee INNER JOIN JOB ON employee.job_id = job.id";
             PreparedStatement pst = connection.prepareStatement(sql);
 
 //            connection.close();

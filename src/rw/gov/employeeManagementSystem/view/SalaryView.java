@@ -376,11 +376,14 @@ public class SalaryView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void updateSalaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSalaryActionPerformed
-
-        if (amount.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Amount Can't be empty");
-        } else if (bonus.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Bonus Can't be empty");
+        if (allsalaries.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(this, "Select row to update");
+        } else if (JName.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Select Job");
+        } else if (amount.getText().trim().isEmpty() || !amount.getText().matches("^[0-9]*$")) {
+            JOptionPane.showMessageDialog(this, "Amount Can't be empty\nOnly digits ");
+        } else if (bonus.getText().trim().isEmpty() || !amount.getText().matches("^[0-9]*$")) {
+            JOptionPane.showMessageDialog(this, "Bonus Can't be empty \nOnly digits ");
         } else {
             int rowSelected = allsalaries.getSelectedRow();
             DefaultTableModel tbModel = (DefaultTableModel) allsalaries.getModel();
@@ -440,15 +443,18 @@ public class SalaryView extends javax.swing.JFrame {
         }
     }
     private void addSalary1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSalary1ActionPerformed
-        if (amount.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Amount Can't be empty");
-        } else if (bonus.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Bonus Can't be empty");
+        if (allsalaries.getSelectedRow() != -1) {
+            JOptionPane.showMessageDialog(this, "Unselect Selected row to Insert");
+        } else if (JName.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Select Job");
+        } else if (amount.getText().trim().isEmpty() || !amount.getText().matches("^[0-9]*$")) {
+            JOptionPane.showMessageDialog(this, "Amount Can't be empty\nOnly digits ");
+        } else if (bonus.getText().trim().isEmpty() || !amount.getText().matches("^[0-9]*$")) {
+            JOptionPane.showMessageDialog(this, "Bonus Can't be empty \nOnly digits ");
         } else {
             try {
                 Salary newSalary = new Salary();
 
-                
                 int theamount = Integer.parseInt(amount.getText());
                 int theanual = theamount * 12;
                 int thebonus = Integer.parseInt(bonus.getText());
@@ -487,27 +493,31 @@ public class SalaryView extends javax.swing.JFrame {
 
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
 
-        int choice = JOptionPane.showConfirmDialog(null, "Are U sure To delete", "confirm", JOptionPane.YES_NO_OPTION);
+        if (allsalaries.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(this, "Select row to update");
+        } else {
+            int choice = JOptionPane.showConfirmDialog(null, "Are U sure To delete", "confirm", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
 
-        if (choice == JOptionPane.YES_OPTION) {
+                int rowSelected = allsalaries.getSelectedRow();
+                DefaultTableModel tbModel = (DefaultTableModel) allsalaries.getModel();
+                int theId = Integer.parseInt(tbModel.getValueAt(rowSelected, 0).toString());
 
-            int rowSelected = allsalaries.getSelectedRow();
-            DefaultTableModel tbModel = (DefaultTableModel) allsalaries.getModel();
-            int theId = Integer.parseInt(tbModel.getValueAt(rowSelected, 0).toString());
+                SalaryDao newSalaryDao = new SalaryDao();
+                Integer rowAffected = newSalaryDao.delete(theId);
 
-            SalaryDao newSalaryDao = new SalaryDao();
-            Integer rowAffected = newSalaryDao.delete(theId);
-
-            if (rowAffected != null) {
-                JOptionPane.showMessageDialog(this, "Salary Deleted");
-                JName.setSelectedIndex(0);
-                amount.setText("");
-                bonus.setText("");
-                allSalaryRetrived();
-            } else {
-                JOptionPane.showMessageDialog(this, "salary not Deleted");
+                if (rowAffected != null) {
+                    JOptionPane.showMessageDialog(this, "Salary Deleted");
+                    JName.setSelectedIndex(0);
+                    amount.setText("");
+                    bonus.setText("");
+                    allSalaryRetrived();
+                } else {
+                    JOptionPane.showMessageDialog(this, "salary not Deleted");
+                }
             }
         }
+
     }//GEN-LAST:event_deleteActionPerformed
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
@@ -589,8 +599,8 @@ public class SalaryView extends javax.swing.JFrame {
         JobDao jobDao = new JobDao();
         ResultSet rs = jobDao.allJobs();
         try {
-            while(rs.next()){
-            JName.addItem(rs.getString("name"));   
+            while (rs.next()) {
+                JName.addItem(rs.getString("name"));
             }
         } catch (Exception ex) {
             ex.printStackTrace();

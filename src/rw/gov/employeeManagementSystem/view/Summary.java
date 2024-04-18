@@ -41,12 +41,12 @@ public class Summary extends javax.swing.JFrame {
                 String email = rs.getString("email");
                 String job_name = rs.getString("name");
                 String department = rs.getString("department");
-                String amount = rs.getString("amount");
-                String anual = rs.getString("anual");
-                String bonus = rs.getString("bonus");
+//                String amount = rs.getString("amount");
+//                String anual = rs.getString("anual");
+//                String bonus = rs.getString("bonus");
 //                String total = Integer.parseInt(anual) + Integer.parseInt(bonus);
 
-                String tData[] = {id, names, gender, email, job_name, department, amount, anual, bonus};
+                String tData[] = {id, names, gender, email, job_name, department};
 
                 tbModel.addRow(tData);
 
@@ -161,11 +161,11 @@ public class Summary extends javax.swing.JFrame {
 
             },
             new String [] {
-                "#", "Names", "Gender", "E-mail", "Job", "Department", "Salary", "Anual", "Bonus"
+                "#", "Names", "Gender", "E-mail", "Job", "Department"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true, true, true, false
+                false, true, true, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
